@@ -85,9 +85,9 @@
                         (= show-search :discover)) search-text]
      (if discoveries
        [scroll-view st/list-container
+        [discover-recent {:current-account current-account}]
         [discover-popular {:contacts        contacts
-                           :current-account current-account}]
-        [discover-recent {:current-account current-account}]]
+                           :current-account current-account}]]
        [view contacts-st/empty-contact-groups
         ;; todo change icon
         [vi/icon :icons/group-big {:style contacts-st/empty-contacts-icon}]
