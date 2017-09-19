@@ -8,7 +8,9 @@
             [status-im.utils.gfycat.core :refer [generate-gfy]]
             [status-im.utils.identicon :refer [identicon]]
             [status-im.components.chat-icon.screen :as ci]
-            [status-im.utils.platform :refer [platform-specific]]))
+            [status-im.utils.platform :refer [platform-specific]]
+            [status-im.components.icons.vector-icons :as vi]
+            [status-im.i18n :as i18n]))
 
 (defn display-name [me? account-name contact-name name whisper-id]
   (cond
@@ -38,15 +40,21 @@
         [status-view {:id     message-id
                       :style  (:status-text item-style)
                       :status status}]
-        [view st/popular-list-item-name-container
-         [view (merge st/popular-list-item-avatar-container
-                      (:icon item-style))
-          [ci/chat-icon
-           (display-image me? account-photo-path contact-photo-path photo-path whisper-id)
-           {:size 20}]]
-         [text {:style           st/popular-list-item-name
-                :font            :medium
-                :number-of-lines 1}
-          (display-name me? account-name contact-name name whisper-id)]]
+        [view st/popular-list-item-second-row
+          [view st/popular-list-item-name-container
+           [view (merge st/popular-list-item-avatar-container
+                        (:icon item-style))
+            [ci/chat-icon
+             (display-image me? account-photo-path contact-photo-path photo-path whisper-id)
+             {:size 20}]]
+           [text {:style           st/popular-list-item-name
+                  :font            :medium
+                  :number-of-lines 1}
+            (display-name me? account-name contact-name name whisper-id)]]
+         (when-not me?
+           [touchable-highlight {:on-press #(dispatch [:start-chat whisper-id])}
+             [view  st/popular-list-chat-action
+              [vi/icon :icons/chats {:color "rgb(110, 0, 228)"}]
+              [text {:style st/popular-list-chat-action-text} (i18n/label :t/chat)]]])]
        (when show-separator?
          [view st/separator])]])))

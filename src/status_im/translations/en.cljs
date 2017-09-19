@@ -161,6 +161,7 @@
    :recent                                "Recent"
    :no-statuses-discovered                "No statuses discovered"
    :no-statuses-found                     "No statuses found"
+   :chat                                  "Chat"
 
    ;;settings
    :settings                              "Settings"

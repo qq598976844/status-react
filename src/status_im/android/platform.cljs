@@ -47,7 +47,7 @@
                                       :border-radius    5
                                       :padding          4}
                            :item     {:status-text {:line-height 22
-                                                    :font-size   14}}}
+                                                    :font-size   16}}}
    :contacts              {:show-all-text-font :medium}
    :bottom-gradient       {:height 3}
    :input-label           {:left 4}

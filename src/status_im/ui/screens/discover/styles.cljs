@@ -77,13 +77,21 @@
 (def popular-list-item
   {:flex-direction "column"
    :padding-bottom 16
+   :margin-right   10
    :top            1})
+
+(def popular-list-item-second-row
+  {:flex            1
+   :flex-direction  :row
+   :align-items     :center
+   :justify-content :space-between
+   :margin-bottom   5
+   :padding-top     25})
 
 (def popular-list-item-name-container
   {:flex            0.3
    :flex-direction  :row
-   :justify-content :flex-start
-   :padding-top     20})
+   :justify-content :flex-start})
 
 (def popular-list-item-name
   {:margin-left 7
@@ -92,6 +100,15 @@
 
 (def popular-list-item-avatar-container
   {:flex-direction "column"})
+
+(def popular-list-chat-action
+  {:background-color "rgb(220, 214, 251)"
+   :flex-direction   :row
+   :border-radius    5
+   :padding          4})
+
+(def popular-list-chat-action-text
+  {:color "rgb(110, 0, 228)"})
 
 ;; discover_recent
 
