@@ -1,23 +1,26 @@
 (ns status-im.ui.screens.discover.views
   (:require-macros [status-im.utils.views :refer [defview letsubs]])
   (:require
-   [re-frame.core :refer [dispatch subscribe]]
-   [clojure.string :as str]
-   [status-im.components.react :refer [view
-                                       scroll-view
-                                       text
-                                       text-input]]
-   [status-im.components.icons.vector-icons :as vi]
-   [status-im.components.toolbar-new.view :refer [toolbar-with-search]]
-   [status-im.components.toolbar-new.actions :as act]
-   [status-im.components.drawer.view :as drawer]
-   [status-im.components.carousel.carousel :refer [carousel]]
-   [status-im.ui.screens.discover.views.popular-list :refer [discover-popular-list]]
-   [status-im.ui.screens.discover.views.discover-list-item :refer [discover-list-item]]
-   [status-im.utils.platform :refer [platform-specific]]
-   [status-im.i18n :refer [label]]
-   [status-im.ui.screens.discover.styles :as st]
-   [status-im.ui.screens.contacts.styles :as contacts-st]))
+    [re-frame.core :refer [dispatch subscribe]]
+    [clojure.string :as str]
+    [status-im.components.react :refer [view
+                                        scroll-view
+                                        text
+                                        text-input
+                                        touchable-highlight]]
+    [status-im.components.icons.vector-icons :as vi]
+    [status-im.components.toolbar-new.view :refer [toolbar-with-search]]
+    [status-im.components.toolbar-new.actions :as act]
+    [status-im.components.drawer.view :as drawer]
+    [status-im.components.carousel.carousel :refer [carousel]]
+    [status-im.ui.screens.discover.views.popular-list :refer [discover-popular-list]]
+    [status-im.ui.screens.discover.views.discover-list-item :refer [discover-list-item]]
+    [status-im.utils.platform :refer [platform-specific]]
+    [status-im.i18n :refer [label]]
+    [status-im.ui.screens.discover.styles :as st]
+    [status-im.ui.screens.contacts.styles :as contacts-st]
+    [status-im.components.toolbar-new.view :as toolbar]
+    [status-im.ui.screens.discover.styles :as st]))
 
 (defn get-hashtags [status]
   (let [hashtags (map #(str/lower-case (str/replace % #"#" "")) (re-seq #"[^ !?,;:.]+" status))]
@@ -60,32 +63,39 @@
                                   :current-account current-account}])]
        [text (label :t/none)])]))
 
-(defview discover-recent [{:keys [current-account]}]
-  (letsubs [discoveries [:get-recent-discoveries]]
+(defview discover-all-recent [current-account]
+  (letsubs [discoveries [:get-recent-discoveries]
+            tabs-hidden?    [:tabs-hidden?]]
     (when (seq discoveries)
-      [view st/recent-container
-       [title :t/recent true]
-       [view st/recent-list
-        (let [discoveries (map-indexed vector discoveries)]
-          (for [[i {:keys [message-id] :as message}] discoveries]
-            ^{:key (str "message-recent-" message-id)}
-            [discover-list-item {:message         message
-                                 :show-separator? (not= (inc i) (count discoveries))
-                                 :current-account current-account}]))]])))
+      [view st/discover-container
+       [toolbar/toolbar2 {}
+        toolbar/default-nav-back
+        [view {} [text {} "All recent"]]]
+       [scroll-view (st/list-container tabs-hidden?)
+         [view st/recent-container
+          [view st/recent-list
+           (let [discoveries (map-indexed vector discoveries)]
+             (for [[i {:keys [message-id] :as message}] discoveries]
+               ^{:key (str "message-recent-" message-id)}
+               [discover-list-item {:message         message
+                                    :show-separator? (not= (inc i) (count discoveries))
+                                    :current-account current-account}]))]]]])))
 
 (defview discover [current-view?]
-  (letsubs [show-search [:get-in [:toolbar-search :show]]
-            search-text [:get-in [:toolbar-search :text]]
-            contacts [:get-contacts]
+  (letsubs [show-search     [:get-in [:toolbar-search :show]]
+            search-text     [:get-in [:toolbar-search :text]]
+            contacts        [:get-contacts]
             current-account [:get-current-account]
-            discoveries [:get-recent-discoveries]
-            tabs-hidden? [:tabs-hidden?]]
+            discoveries     [:get-recent-discoveries]
+            tabs-hidden?    [:tabs-hidden?]]
     [view st/discover-container
      [toolbar-view (and current-view?
                         (= show-search :discover)) search-text]
      (if discoveries
        [scroll-view st/list-container
-        [discover-recent {:current-account current-account}]
+        [title :t/recent true]
+        [touchable-highlight {:on-press #(dispatch [:navigate-to :discover-all-recent current-account])}
+         [view {} [text {:style {:color "magenta"}} "All recent statuses"]]] ;dummy lead
         [discover-popular {:contacts        contacts
                            :current-account current-account}]]
        [view contacts-st/empty-contact-groups

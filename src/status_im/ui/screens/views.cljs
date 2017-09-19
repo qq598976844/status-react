@@ -46,7 +46,8 @@
             [status-im.ui.screens.wallet.request.views :refer [request-transaction]]
             [status-im.ui.screens.wallet.wallet-list.views :refer [wallet-list-screen]]
             [status-im.ui.screens.wallet.transactions.views :as wallet-transactions]
-            [status-im.components.status-bar :as status-bar]))
+            [status-im.components.status-bar :as status-bar]
+            [status-im.ui.screens.discover.views :as discover]))
 
 (defn validate-current-view
   [current-view signed-up?]
@@ -87,6 +88,7 @@
                           :profile profile
                           :my-profile my-profile
                           :edit-my-profile edit-my-profile
+                          :discover-all-recent discover/discover-all-recent
                           :profile-photo-capture profile-photo-capture
                           :accounts accounts
                           :login login
