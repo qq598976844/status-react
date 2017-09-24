@@ -63,9 +63,10 @@
                                   :current-account current-account}])]
        [text (label :t/none)])]))
 
-(defview discover-all-recent [current-account]
+(defview discover-all-recent []
   (letsubs [discoveries [:get-recent-discoveries]
-            tabs-hidden?    [:tabs-hidden?]]
+            tabs-hidden?    [:tabs-hidden?]
+            current-account [:get-current-account]]
     (when (seq discoveries)
       [view st/discover-container
        [toolbar/toolbar2 {}
@@ -95,7 +96,7 @@
        [scroll-view st/list-container
         [title :t/recent true]
         [touchable-highlight {:on-press #(dispatch [:navigate-to :discover-all-recent current-account])}
-         [view {} [text {:style {:color "magenta"}} "All recent statuses"]]] ;dummy lead
+         [view {} [text {:style {:color "red"}} "All recent statuses"]]] ;dummy lead
         [discover-popular {:contacts        contacts
                            :current-account current-account}]]
        [view contacts-st/empty-contact-groups
