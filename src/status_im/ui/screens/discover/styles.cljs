@@ -169,3 +169,13 @@
 
 (def title-action-text
   {:color "rgb(110, 0, 228)"})
+
+(def recent-statuses-preview-container
+  {:background-color toolbar-background2})
+
+(def recent-statuses-preview-content
+  {:padding          8
+   :margin-left      8
+   :margin-right     8
+   :border-radius    10
+   :background-color :white})

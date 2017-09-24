@@ -84,6 +84,22 @@
                                     :show-separator? (not= (inc i) (count discoveries))
                                     :current-account current-account}]))]]]])))
 
+(defn empty-discoveries []
+  [view contacts-st/empty-contact-groups
+   ;; todo change icon
+   [vi/icon :icons/group-big {:style contacts-st/empty-contacts-icon}]
+   [text {:style contacts-st/empty-contacts-text}
+    (label :t/no-statuses-discovered)]])
+
+(defn recent-statuses-preview [current-account discovery]
+  [view st/recent-statuses-preview-container
+   [title :t/recent false :t/all #(dispatch [:navigate-to :discover-all-recent])]
+   [view st/recent-statuses-preview-content
+    [discover-list-item {:message         discovery
+                         :show-separator? false
+                         :current-account current-account}]]])
+
+
 (defview discover [current-view?]
   (letsubs [show-search     [:get-in [:toolbar-search :show]]
             search-text     [:get-in [:toolbar-search :text]]
@@ -96,11 +112,7 @@
                         (= show-search :discover)) search-text]
      (if discoveries
        [scroll-view st/list-container
-        [title :t/recent false :t/all #(dispatch [:navigate-to :discover-all-recent])]
+        [recent-statuses-preview current-account (first discoveries)]
         [discover-popular {:contacts        contacts
                            :current-account current-account}]]
-       [view contacts-st/empty-contact-groups
-        ;; todo change icon
-        [vi/icon :icons/group-big {:style contacts-st/empty-contacts-icon}]
-        [text {:style contacts-st/empty-contacts-text}
-         (label :t/no-statuses-discovered)]])]))
+       [empty-discoveries])]))
