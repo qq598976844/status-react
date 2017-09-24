@@ -40,18 +40,20 @@
                               (dispatch [:set :discover-search-tags hashtags])
                               (dispatch [:navigate-to :discover-search-results]))))}])
 
-(defn title [label-kw spacing?]
-  [view st/section-spacing
-   [text {:style      (merge (get-in platform-specific [:component-styles :discover :subtitle])
-                             (when spacing? {:margin-top 16}))
+(defn title [label-kw spacing? action-kw action-fn]
+  [view (merge st/title
+               (when spacing? {:margin-top 16}))
+   [text {:style      (get-in platform-specific [:component-styles :discover :subtitle])
           :uppercase? (get-in platform-specific [:discover :uppercase-subtitles?])
           :font       :medium}
-    (label label-kw)]])
+    (label label-kw)]
+   [touchable-highlight {:on-press action-fn}
+    [view {} [text {:style st/title-action-text} (label action-kw)]]]])
 
 (defview discover-popular [{:keys [contacts current-account]}]
   (letsubs [popular-tags [:get-popular-tags 10]]
     [view st/popular-container
-     [title :t/popular-tags false]
+     [title :t/popular-tags false :t/all #()]
      (if (pos? (count popular-tags))
        [carousel {:pageStyle st/carousel-page-style
                   :gap       8
@@ -64,7 +66,7 @@
        [text (label :t/none)])]))
 
 (defview discover-all-recent []
-  (letsubs [discoveries [:get-recent-discoveries]
+  (letsubs [discoveries     [:get-recent-discoveries]
             tabs-hidden?    [:tabs-hidden?]
             current-account [:get-current-account]]
     (when (seq discoveries)
@@ -94,9 +96,7 @@
                         (= show-search :discover)) search-text]
      (if discoveries
        [scroll-view st/list-container
-        [title :t/recent true]
-        [touchable-highlight {:on-press #(dispatch [:navigate-to :discover-all-recent current-account])}
-         [view {} [text {:style {:color "red"}} "All recent statuses"]]] ;dummy lead
+        [title :t/recent false :t/all #(dispatch [:navigate-to :discover-all-recent])]
         [discover-popular {:contacts        contacts
                            :current-account current-account}]]
        [view contacts-st/empty-contact-groups

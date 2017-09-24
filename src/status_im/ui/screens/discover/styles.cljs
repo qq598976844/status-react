@@ -26,8 +26,10 @@
    :align-items      :center
    :justify-content  :center})
 
-(def section-spacing
-  {:padding 16})
+(def title
+  {:padding 16
+   :flex-direction :row
+   :justify-content :space-between})
 
 ;; Popular
 
@@ -164,3 +166,6 @@
 (def search-icon
   {:width  17
    :height 17})
+
+(def title-action-text
+  {:color "rgb(110, 0, 228)"})
