@@ -12,8 +12,8 @@
     [status-im.ui.screens.discover.views.discover-list-item :refer [discover-list-item]]
     [status-im.utils.platform :refer [platform-specific]]))
 
-(defview discover-popular-list [{:keys [tag contacts current-account]}]
-  (letsubs [discoveries [:get-popular-discoveries 3 [tag]]]
+(defview discover-popular-list [{:keys [max-count tag contacts current-account]}]
+  (letsubs [discoveries [:get-popular-discoveries max-count [tag]]]
     [view (merge st/popular-list-container
                  (get-in platform-specific [:component-styles :discover :popular]))
      [view st/row
@@ -32,5 +32,5 @@
        (for [[i {:keys [message-id] :as discover}] discoveries]
          ^{:key (str "message-popular-" message-id)}
          [discover-list-item {:message         discover
-                               :show-separator? (not= (inc i) (count discoveries))
-                               :current-account current-account}]))]))
+                              :show-separator? (not= (inc i) (count discoveries))
+                              :current-account current-account}]))]))

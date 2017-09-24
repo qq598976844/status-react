@@ -50,7 +50,7 @@
    [touchable-highlight {:on-press action-fn}
     [view {} [text {:style st/title-action-text} (label action-kw)]]]])
 
-(defview discover-popular [{:keys [contacts current-account]}]
+(defview popular-statuses-preview [{:keys [contacts current-account]}]
   (letsubs [popular-tags [:get-popular-tags 10]]
     [view st/popular-container
      [title :t/popular-tags false :t/all #()]
@@ -60,7 +60,8 @@
                   :sneak     16
                   :count     (count popular-tags)}
         (for [{:keys [name]} popular-tags]
-          [discover-popular-list {:tag             name
+          [discover-popular-list {:max-count       1
+                                  :tag             name
                                   :contacts        contacts
                                   :current-account current-account}])]
        [text (label :t/none)])]))
@@ -99,7 +100,6 @@
                          :show-separator? false
                          :current-account current-account}]]])
 
-
 (defview discover [current-view?]
   (letsubs [show-search     [:get-in [:toolbar-search :show]]
             search-text     [:get-in [:toolbar-search :text]]
@@ -113,6 +113,6 @@
      (if discoveries
        [scroll-view st/list-container
         [recent-statuses-preview current-account (first discoveries)]
-        [discover-popular {:contacts        contacts
-                           :current-account current-account}]]
+        [popular-statuses-preview {:contacts        contacts
+                                   :current-account current-account}]]
        [empty-discoveries])]))

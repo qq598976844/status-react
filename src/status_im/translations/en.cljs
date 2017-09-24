@@ -157,7 +157,7 @@
    :discover                              "Discover"
    :none                                  "None"
    :search-tags                           "Type your search tags here"
-   :popular-tags                          "Popular tags"
+   :popular-tags                          "Popular hashtags"
    :recent                                "Recent statuses"
    :no-statuses-discovered                "No statuses discovered"
    :no-statuses-found                     "No statuses found"
