@@ -37,7 +37,7 @@
 
 (reg-sub :get-recent-discoveries
   (fn [db]
-    (vals (:discoveries db))))
+    (sort-by :created-at > (vals (:discoveries db)))))
 
 (reg-sub :get-popular-tags
   (fn [db [_ limit]]
