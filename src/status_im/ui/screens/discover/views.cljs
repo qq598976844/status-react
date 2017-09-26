@@ -92,27 +92,33 @@
    [text {:style contacts-st/empty-contacts-text}
     (label :t/no-statuses-discovered)]])
 
-(defn recent-statuses-preview [current-account discovery]
+(defn recent-statuses-preview [current-account discoveries]
   [view st/recent-statuses-preview-container
    [title :t/recent false :t/all #(dispatch [:navigate-to :discover-all-recent])]
-   [view st/recent-statuses-preview-content
-    [discover-list-item {:message         discovery
-                         :show-separator? false
-                         :current-account current-account}]]])
+   (if (pos? (count discoveries))
+     [carousel {:pageStyle st/carousel-page-style
+                :gap       8
+                :sneak     16
+                :count     (count discoveries)}
+      (for [discovery discoveries]
+        [view st/recent-statuses-preview-content
+         [discover-list-item {:message         discovery
+                              :show-separator? false
+                              :current-account current-account}]])]
+     [text (label :t/none)])])
 
 (defview discover [current-view?]
   (letsubs [show-search     [:get-in [:toolbar-search :show]]
             search-text     [:get-in [:toolbar-search :text]]
             contacts        [:get-contacts]
             current-account [:get-current-account]
-            discoveries     [:get-recent-discoveries]
-            tabs-hidden?    [:tabs-hidden?]]
+            discoveries     [:get-recent-discoveries]]
     [view st/discover-container
      [toolbar-view (and current-view?
                         (= show-search :discover)) search-text]
      (if discoveries
        [scroll-view st/list-container
-        [recent-statuses-preview current-account (first discoveries)]
+        [recent-statuses-preview current-account discoveries]
         [popular-statuses-preview {:contacts        contacts
                                    :current-account current-account}]]
        [empty-discoveries])]))
