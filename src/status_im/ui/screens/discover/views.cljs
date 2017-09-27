@@ -13,7 +13,7 @@
     [status-im.components.toolbar-new.actions :as act]
     [status-im.components.drawer.view :as drawer]
     [status-im.components.carousel.carousel :refer [carousel]]
-    [status-im.ui.screens.discover.views.popular-list :refer [discover-popular-list]]
+    [status-im.ui.screens.discover.views.popular-list :refer [popular-hashtag-status-preview]]
     [status-im.ui.screens.discover.views.discover-list-item :refer [discover-list-item]]
     [status-im.utils.platform :refer [platform-specific]]
     [status-im.i18n :refer [label]]
@@ -50,7 +50,7 @@
    [touchable-highlight {:on-press action-fn}
     [view {} [text {:style st/title-action-text} (label action-kw)]]]])
 
-(defview popular-statuses-preview [{:keys [contacts current-account]}]
+(defview popular-hashtags-preview [{:keys [contacts current-account]}]
   (letsubs [popular-tags [:get-popular-tags 10]]
     [view st/popular-container
      [title :t/popular-tags false :t/all #()]
@@ -60,10 +60,9 @@
                   :sneak     16
                   :count     (count popular-tags)}
         (for [{:keys [name]} popular-tags]
-          [discover-popular-list {:max-count       1
-                                  :tag             name
-                                  :contacts        contacts
-                                  :current-account current-account}])]
+          [popular-hashtag-status-preview {:tag             name
+                                           :contacts        contacts
+                                           :current-account current-account}])]
        [text (label :t/none)])]))
 
 (defview discover-all-recent []
@@ -119,6 +118,6 @@
      (if discoveries
        [scroll-view st/list-container
         [recent-statuses-preview current-account discoveries]
-        [popular-statuses-preview {:contacts        contacts
+        [popular-hashtags-preview {:contacts        contacts
                                    :current-account current-account}]]
        [empty-discoveries])]))

@@ -74,7 +74,8 @@
   {:flex             1
    :background-color :white
    :padding-top      18
-   :padding-left     16})
+   :padding-left     16
+   :border-radius    10})
 
 (def popular-list-item
   {:flex-direction "column"
