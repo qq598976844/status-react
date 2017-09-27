@@ -7,7 +7,8 @@
                                                 text
                                                 list-view
                                                 list-item
-                                                scroll-view]]
+                                                scroll-view
+                                                touchable-highlight]]
             [status-im.components.icons.vector-icons :as vi]
             [status-im.components.toolbar.view :refer [toolbar]]
             [status-im.components.toolbar.actions :as act]
@@ -21,25 +22,24 @@
   (list-item [view {:style st/row-separator
                     :key   row-id}]))
 
-(defn tag-link [tag]
-  [view (merge (get-in platform-specific [:component-styles :discover :tag])
-               {:margin-left 2 :margin-right 2})
-   [text {:style st/tag-title
-          :font  :default}
-    (str " #" tag)]])
-
 (defn tags-menu [tags]
    [view st/tag-title-container
     (for [tag (take 3 tags)]
       ^{:key (str "tag-" tag)}
-      [tag-link tag])])
+      [touchable-highlight {:on-press #(do (dispatch [:set :discover-search-tags [tag]])
+                                           (dispatch [:navigate-to :discover-search-results]))}
+        [view (merge (get-in platform-specific [:component-styles :discover :tag])
+                     {:margin-left 2 :margin-right 2})
+         [text {:style st/tag-title
+                :font  :default}
+          (str " #" tag)]]])])
 
 (defview discover-search-results []
-  (letsubs [discoveries [:get-popular-discoveries 250]
-            tags [:get :discover-search-tags]
+  (letsubs [discoveries     [:get-popular-discoveries 250]
+            tags            [:get :discover-search-tags]
             current-account [:get-current-account]]
     (let [discoveries (:discoveries discoveries)
-          datasource (to-datasource discoveries)]
+          datasource  (to-datasource discoveries)]
       [view st/discover-tag-container
        [status-bar]
        [toolbar {:nav-action     (act/back #(dispatch [:navigate-back]))
