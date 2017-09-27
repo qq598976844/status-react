@@ -89,6 +89,7 @@
                           :my-profile my-profile
                           :edit-my-profile edit-my-profile
                           :discover-all-recent discover/discover-all-recent
+                          :discover-all-hashtags discover/discover-all-hashtags
                           :profile-photo-capture profile-photo-capture
                           :accounts accounts
                           :login login

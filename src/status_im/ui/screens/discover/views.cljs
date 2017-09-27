@@ -53,7 +53,8 @@
 (defview popular-hashtags-preview [{:keys [contacts current-account]}]
   (letsubs [popular-tags [:get-popular-tags 10]]
     [view st/popular-container
-     [title :t/popular-tags false :t/all #()]
+     [title :t/popular-tags false :t/all #(do (dispatch [:set :discover-search-tags (map :name popular-tags)])
+                                              (dispatch [:navigate-to :discover-all-hashtags]))]
      (if (pos? (count popular-tags))
        [carousel {:pageStyle st/carousel-page-style
                   :gap       8
@@ -64,6 +65,22 @@
                                            :contacts        contacts
                                            :current-account current-account}])]
        [text (label :t/none)])]))
+
+(defview discover-all-hashtags [{:keys [contacts current-account]}]
+  (letsubs [{:keys [discoveries]} [:get-popular-discoveries 10]]
+     [view st/discover-container
+      [toolbar/toolbar2 {}
+       toolbar/default-nav-back
+       [view {} [text {} "All hashtags"]]]
+      [scroll-view st/list-container
+       [view st/recent-container
+        [view st/recent-list
+         (let [discoveries (map-indexed vector discoveries)]
+           (for [[i {:keys [message-id] :as message}] discoveries]
+             ^{:key (str "message-hashtag-" message-id)}
+             [discover-list-item {:message         message
+                                  :show-separator? (not= (inc i) (count discoveries))
+                                  :current-account current-account}]))]]]]))
 
 (defview discover-all-recent []
   (letsubs [discoveries     [:get-recent-discoveries]
