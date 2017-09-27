@@ -21,19 +21,18 @@
   (list-item [view {:style st/row-separator
                     :key   row-id}]))
 
-(defn title-content [tags]
-  [scroll-view {:horizontal            true
-                :bounces               false
-                :flex                  1
-                :contentContainerStyle st/tag-title-scroll}
+(defn tag-link [tag]
+  [view (merge (get-in platform-specific [:component-styles :discover :tag])
+               {:margin-left 2 :margin-right 2})
+   [text {:style st/tag-title
+          :font  :default}
+    (str " #" tag)]])
+
+(defn tags-menu [tags]
    [view st/tag-title-container
     (for [tag (take 3 tags)]
       ^{:key (str "tag-" tag)}
-      [view (merge (get-in platform-specific [:component-styles :discover :tag])
-                   {:margin-left 2 :margin-right 2})
-       [text {:style st/tag-title
-              :font  :default}
-        (str " #" tag)]])]])
+      [tag-link tag])])
 
 (defview discover-search-results []
   (letsubs [discoveries [:get-popular-discoveries 250]
@@ -44,7 +43,7 @@
       [view st/discover-tag-container
        [status-bar]
        [toolbar {:nav-action     (act/back #(dispatch [:navigate-back]))
-                 :custom-content (title-content tags)
+                 :custom-content (tags-menu tags)
                  :style          st/discover-tag-toolbar}]
        (if (empty? discoveries)
          [view st/empty-view

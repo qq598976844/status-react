@@ -75,7 +75,7 @@
    :background-color :white
    :padding-top      18
    :padding-left     16
-   :border-radius    10})
+   })
 
 (def popular-list-item
   {:flex-direction "column"
@@ -138,7 +138,7 @@
    :justifyContent "center"})
 
 (def tag-title-container
-  {:flex           1
+  {:flex           0.2
    :alignItems     "center"
    :justifyContent "center"
    :flex-direction "row"})
