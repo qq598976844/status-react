@@ -72,7 +72,7 @@
 (defn action-buttons [m]
   [react/view {:style transactions.styles/action-buttons}
    [button/primary-button {:text (i18n/label :t/transactions-sign)
-
+                           :style {:margin-right 12}
                            :on-press #(re-frame/dispatch [:navigate-to-modal :wallet-transactions-sign-all])}]
    [button/secondary-button {:text (i18n/label :t/delete) :on-press #(on-delete-transaction m)}]])
 
