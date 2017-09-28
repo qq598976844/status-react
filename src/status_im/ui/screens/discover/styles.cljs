@@ -39,13 +39,20 @@
 (def carousel-page-style
   {})
 
-(def tag-name
+(def tag-button
   {:color           color-blue
    :font-size       14
    :padding-right   5
    :padding-bottom  2
    :align-items     :center
    :justify-content :center})
+
+(def tag-name
+  {:color            color-blue
+   :background-color :white
+   :font-size        14
+   :align-items      :center
+   :justify-content  :center})
 
 (def tag-count
   {:color           "#838c93"
@@ -175,8 +182,10 @@
   {:background-color toolbar-background2})
 
 (def recent-statuses-preview-content
-  {:padding          8
-   :margin-left      8
-   :margin-right     8
-   :border-radius    10
+  {:border-radius    4
+   :padding-top      18
+   :padding-left     16
+   :margin-top       2
+   :margin-bottom    4
+   :margin-right     2
    :background-color :white})

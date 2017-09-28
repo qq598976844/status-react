@@ -15,12 +15,12 @@
 (defview popular-hashtag-status-preview [{:keys [tag current-account]}]
   (letsubs [discoveries [:get-popular-discoveries 1 [tag]]]
     [view (merge st/popular-list-container
-                 #_(get-in platform-specific [:component-styles :discover :popular]))
+                 (get-in platform-specific [:component-styles :discover :popular]))
      [view st/row
-      [view (get-in platform-specific [:component-styles :discover :tag])
+      [view {}
        [touchable-highlight {:on-press #(do (dispatch [:set :discover-search-tags [tag]])
                                             (dispatch [:navigate-to :discover-search-results]))}
-        [view
+        [view {}
          [text {:style st/tag-name
                 :font  :medium}
           (str " #" (name tag))]]]]
