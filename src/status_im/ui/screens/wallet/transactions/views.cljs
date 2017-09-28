@@ -262,7 +262,7 @@
       toolbar/default-nav-back
       [toolbar/content-title (i18n/label :t/transaction-details)]
       [toolbar/actions (details-action hash url)]]
-     [react/scroll-view
+     [react/scroll-view {:style transactions.styles/main-section}
       [transaction-details-header transaction-details]
       [transaction-details-confirmations confirmations confirmations-progress]
       [react/view {:style transactions.styles/transaction-details-separator}]
