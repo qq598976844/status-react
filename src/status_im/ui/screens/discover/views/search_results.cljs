@@ -16,7 +16,8 @@
             [status-im.utils.platform :refer [platform-specific]]
             [status-im.i18n :refer [label]]
             [status-im.ui.screens.discover.styles :as st]
-            [status-im.ui.screens.contacts.styles :as contacts-st]))
+            [status-im.ui.screens.contacts.styles :as contacts-st]
+            [status-im.components.toolbar-new.view :as toolbar]))
 
 (defn render-separator [_ row-id _]
   (list-item [view {:style st/row-separator
@@ -34,6 +35,7 @@
                 :font  :default}
           (str " #" tag)]]])])
 
+
 (defview discover-search-results []
   (letsubs [discoveries     [:get-popular-discoveries 250]
             tags            [:get :discover-search-tags]
@@ -42,9 +44,11 @@
           datasource  (to-datasource discoveries)]
       [view st/discover-tag-container
        [status-bar]
-       [toolbar {:nav-action     (act/back #(dispatch [:navigate-back]))
-                 :custom-content (tags-menu tags)
-                 :style          st/discover-tag-toolbar}]
+       [toolbar/toolbar2 {}
+        toolbar/default-nav-back
+        [view {:flex-direction  :row
+               :justify-content :flex-start}
+         [text {} (str "#" (first tags))]]]
        (if (empty? discoveries)
          [view st/empty-view
           [vi/icon :icons/group-big {:style contacts-st/empty-contacts-icon}]
