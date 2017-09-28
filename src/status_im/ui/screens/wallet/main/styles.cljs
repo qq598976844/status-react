@@ -3,18 +3,27 @@
   (:require [status-im.components.styles :as styles]
             [status-im.utils.platform :as platform]))
 
-(def error-container
+;;;;;;;;;;;;;;;;;;
+;; Errors       ;;
+;;;;;;;;;;;;;;;;;;
+
+(defstyle error-container
   {:align-self       :center
    :justify-content  :center
-   :border-radius    20
-   :flex-direction   :row
+   :ios              {:border-radius 20
+                      :margin-top 6}
+   :android          {:border-radius    4
+                      :margin-top       18}
    :background-color styles/color-blue5})
 
 (def error-message
   {:color         styles/color-white
-   :padding-top   3
    :padding-right 10
    :font-size     13})
+
+;;;;;;;;;;;;;;;;;;
+;; Toolbar      ;;
+;;;;;;;;;;;;;;;;;;
 
 (def toolbar-title-container
   {:flex-direction :row
