@@ -105,6 +105,7 @@
       (when (unsigned? type)
         [action-buttons m])]
      [list/item-icon {:icon :icons/forward
+                      :style {:margin-top 10}
                       :icon-opts transactions.styles/forward}]]]])
 
 ;; TODO(yenda) hook with re-frame
