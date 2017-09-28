@@ -1,4 +1,4 @@
-(ns status-im.ui.screens.discover.views.components
+(ns status-im.ui.screens.discover.components.views
   (:require-macros [status-im.utils.views :refer [defview letsubs]])
   (:require [re-frame.core :refer [subscribe dispatch]]
             [clojure.string :as str]

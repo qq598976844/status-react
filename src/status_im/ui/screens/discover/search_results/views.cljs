@@ -1,4 +1,4 @@
-(ns status-im.ui.screens.discover.views.search-results
+(ns status-im.ui.screens.discover.search-results.views
   (:require-macros [status-im.utils.views :refer [defview letsubs]])
   (:require [re-frame.core :refer [subscribe dispatch]]
             [status-im.utils.listview :refer [to-datasource]]
@@ -11,8 +11,7 @@
                                                 touchable-highlight]]
             [status-im.components.icons.vector-icons :as vi]
             [status-im.components.toolbar.view :refer [toolbar]]
-            [status-im.components.toolbar.actions :as act]
-            [status-im.ui.screens.discover.views.components :refer [discover-list-item]]
+            [status-im.ui.screens.discover.components.views :refer [discover-list-item]]
             [status-im.utils.platform :refer [platform-specific]]
             [status-im.i18n :refer [label]]
             [status-im.ui.screens.discover.styles :as st]

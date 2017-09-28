@@ -1,4 +1,4 @@
-(ns status-im.ui.screens.discover.views.popular-hashtags
+(ns status-im.ui.screens.discover.popular-hashtags.views
   (:require-macros [status-im.utils.views :refer [defview letsubs]])
   (:require
     [re-frame.core :refer [subscribe dispatch]]
@@ -10,7 +10,7 @@
                                         text]]
     [status-im.ui.screens.discover.styles :as st]
     [status-im.utils.listview :refer [to-datasource]]
-    [status-im.ui.screens.discover.views.components :refer [discover-list-item tags-menu]]
+    [status-im.ui.screens.discover.components.views :refer [discover-list-item tags-menu]]
     [status-im.utils.platform :refer [platform-specific]]
     [status-im.components.toolbar-new.view :as toolbar]))
 
