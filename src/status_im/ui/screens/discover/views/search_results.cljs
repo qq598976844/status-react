@@ -12,7 +12,7 @@
             [status-im.components.icons.vector-icons :as vi]
             [status-im.components.toolbar.view :refer [toolbar]]
             [status-im.components.toolbar.actions :as act]
-            [status-im.ui.screens.discover.views.discover-list-item :refer [discover-list-item]]
+            [status-im.ui.screens.discover.views.components :refer [discover-list-item]]
             [status-im.utils.platform :refer [platform-specific]]
             [status-im.i18n :refer [label]]
             [status-im.ui.screens.discover.styles :as st]
@@ -22,18 +22,6 @@
 (defn render-separator [_ row-id _]
   (list-item [view {:style st/row-separator
                     :key   row-id}]))
-
-(defn tags-menu [tags]
-   [view st/tag-title-container
-    (for [tag (take 3 tags)]
-      ^{:key (str "tag-" tag)}
-      [touchable-highlight {:on-press #(do (dispatch [:set :discover-search-tags [tag]])
-                                           (dispatch [:navigate-to :discover-search-results]))}
-        [view (merge (get-in platform-specific [:component-styles :discover :tag])
-                     {:margin-left 2 :margin-right 2})
-         [text {:style st/tag-title
-                :font  :default}
-          (str " #" tag)]]])])
 
 
 (defview discover-search-results []

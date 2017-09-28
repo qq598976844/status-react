@@ -13,14 +13,12 @@
     [status-im.components.toolbar-new.actions :as act]
     [status-im.components.drawer.view :as drawer]
     [status-im.components.carousel.carousel :refer [carousel]]
-    [status-im.ui.screens.discover.views.popular-list :refer [popular-hashtag-status-preview]]
-    [status-im.ui.screens.discover.views.discover-list-item :refer [discover-list-item]]
+    [status-im.ui.screens.discover.views.components :refer [discover-list-item title]]
     [status-im.ui.screens.discover.views.search-results :refer [tags-menu]]
     [status-im.utils.platform :refer [platform-specific]]
     [status-im.i18n :refer [label]]
     [status-im.ui.screens.discover.styles :as st]
     [status-im.ui.screens.contacts.styles :as contacts-st]
-    [status-im.components.toolbar-new.view :as toolbar]
     [status-im.ui.screens.discover.styles :as st]))
 
 (defn get-hashtags [status]
@@ -41,33 +39,26 @@
                               (dispatch [:set :discover-search-tags hashtags])
                               (dispatch [:navigate-to :discover-search-results]))))}])
 
-(defn title [label-kw spacing? action-kw action-fn]
-  [view (merge st/title
-               (when spacing? {:margin-top 16}))
-   [text {:style      (get-in platform-specific [:component-styles :discover :subtitle])
-          :uppercase? (get-in platform-specific [:discover :uppercase-subtitles?])
-          :font       :medium}
-    (label label-kw)]
-   [touchable-highlight {:on-press action-fn}
-    [view {} [text {:style st/title-action-text} (label action-kw)]]]])
 
-(defview discover-all-hashtags [{:keys [contacts current-account]}]
-  (letsubs [popular-tags          [:get-popular-tags 10]
-            {:keys [discoveries]} [:get-popular-discoveries 10]]  ;uses the tags passed via :discover-search-tags state
-     [view st/discover-container
-      [toolbar/toolbar2 {}
-       toolbar/default-nav-back
-       [view {} [text {} "All hashtags"]]]
-      [tags-menu (map :name popular-tags)]
-      [scroll-view st/list-container
-       [view st/recent-container
-        [view st/recent-list
-         (let [discoveries (map-indexed vector discoveries)]
-           (for [[i {:keys [message-id] :as message}] discoveries]
-             ^{:key (str "message-hashtag-" message-id)}
-             [discover-list-item {:message         message
-                                  :show-separator? (not= (inc i) (count discoveries))
-                                  :current-account current-account}]))]]]]))
+(defview top-status-for-popular-hashtag [{:keys [tag current-account]}]
+  (letsubs [discoveries [:get-popular-discoveries 1 [tag]]]
+    [view (merge st/popular-list-container
+                 (get-in platform-specific [:component-styles :discover :popular]))
+     [view st/row
+      [view {}
+       [touchable-highlight {:on-press #(do (dispatch [:set :discover-search-tags [tag]])
+                                            (dispatch [:navigate-to :discover-search-results]))}
+        [view {}
+         [text {:style st/tag-name
+                :font  :medium}
+          (str " #" (name tag))]]]]
+      [view st/tag-count-container
+       [text {:style st/tag-count
+              :font  :default}
+        (:total discoveries)]]]
+     [discover-list-item {:message         (first (:discoveries discoveries))
+                          :show-separator? false
+                          :current-account current-account}]]))
 
 (defview popular-hashtags-preview [{:keys [contacts current-account]}]
   (letsubs [popular-tags [:get-popular-tags 10]]
@@ -80,30 +71,11 @@
                   :sneak     16
                   :count     (count popular-tags)}
         (for [{:keys [name]} popular-tags]
-          [popular-hashtag-status-preview {:tag             name
+          [top-status-for-popular-hashtag {:tag             name
                                            :contacts        contacts
                                            :current-account current-account}])]
        [text (label :t/none)])]))
 
-
-(defview discover-all-recent []
-  (letsubs [discoveries     [:get-recent-discoveries]
-            tabs-hidden?    [:tabs-hidden?]
-            current-account [:get-current-account]]
-    (when (seq discoveries)
-      [view st/discover-container
-       [toolbar/toolbar2 {}
-        toolbar/default-nav-back
-        [view {} [text {} "All recent"]]]
-       [scroll-view (st/list-container tabs-hidden?)
-         [view st/recent-container
-          [view st/recent-list
-           (let [discoveries (map-indexed vector discoveries)]
-             (for [[i {:keys [message-id] :as message}] discoveries]
-               ^{:key (str "message-recent-" message-id)}
-               [discover-list-item {:message         message
-                                    :show-separator? (not= (inc i) (count discoveries))
-                                    :current-account current-account}]))]]]])))
 
 (defn empty-discoveries []
   [view contacts-st/empty-contact-groups

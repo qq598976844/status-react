@@ -1,4 +1,4 @@
-(ns status-im.ui.screens.discover.views.discover-list-item
+(ns status-im.ui.screens.discover.views.components
   (:require-macros [status-im.utils.views :refer [defview letsubs]])
   (:require [re-frame.core :refer [subscribe dispatch]]
             [clojure.string :as str]
@@ -11,6 +11,28 @@
             [status-im.utils.platform :refer [platform-specific]]
             [status-im.components.icons.vector-icons :as vi]
             [status-im.i18n :as i18n]))
+
+(defn title [label-kw spacing? action-kw action-fn]
+  [view (merge st/title
+               (when spacing? {:margin-top 16}))
+   [text {:style      (get-in platform-specific [:component-styles :discover :subtitle])
+          :uppercase? (get-in platform-specific [:discover :uppercase-subtitles?])
+          :font       :medium}
+    (i18n/label label-kw)]
+   [touchable-highlight {:on-press action-fn}
+    [view {} [text {:style st/title-action-text} (i18n/label action-kw)]]]])
+
+(defn tags-menu [tags]
+  [view st/tag-title-container
+   (for [tag (take 3 tags)]
+     ^{:key (str "tag-" tag)}
+     [touchable-highlight {:on-press #(do (dispatch [:set :discover-search-tags [tag]])
+                                          (dispatch [:navigate-to :discover-search-results]))}
+      [view (merge (get-in platform-specific [:component-styles :discover :tag])
+                   {:margin-left 2 :margin-right 2})
+       [text {:style st/tag-title
+              :font  :default}
+        (str " #" tag)]]])])
 
 (defn display-name [me? account-name contact-name name whisper-id]
   (cond
