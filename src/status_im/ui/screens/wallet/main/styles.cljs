@@ -136,18 +136,19 @@
   {:font-size 16
    :color     styles/color-black})
 
-(def add-asset-icon
+(defstyle add-asset-icon
   {:flex             1
    :justify-content  :center
    :align-items      :center
    :width            40
    :height           40
    :border-radius    32
-   :background-color styles/color-blue4-transparent})
+   :ios              {:background-color styles/color-blue4-transparent}})
 
-(def add-asset-text
+(defstyle add-asset-text
   {:font-size 16
-   :color     styles/color-blue4})
+   :ios       {:color styles/color-blue4}
+   :android   {:color styles/color-black}})
 
 (def asset-item-currency
   {:font-size   16
