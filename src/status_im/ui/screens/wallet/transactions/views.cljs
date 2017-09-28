@@ -93,17 +93,17 @@
     (throw (str "Unknown transaction type: " k))))
 
 (defn render-transaction [{:keys [hash to from type value symbol] :as m}]
-  [list/item
-   [list/item-icon (transaction-type->icon (keyword type))]
-   [list/item-content
-    (str value " " symbol)
-    (if (inbound? type)
-      (str (i18n/label :t/from) " " from)
-      (str (i18n/label :t/to) " " to))
-    (when (unsigned? type)
-      [action-buttons m])]
-   [react/touchable-highlight {:on-press #(re-frame/dispatch [:show-transaction-details hash])}
-    [react/view
+  [list/touchable-item #(re-frame/dispatch [:show-transaction-details hash])
+   [react/view
+    [list/item
+     [list/item-icon (transaction-type->icon (keyword type))]
+     [list/item-content
+      (str value " " symbol)
+      (if (inbound? type)
+        (str (i18n/label :t/from) " " from)
+        (str (i18n/label :t/to) " " to))
+      (when (unsigned? type)
+        [action-buttons m])]
      [list/item-icon {:icon :icons/forward
                       :icon-opts transactions.styles/forward}]]]])
 
